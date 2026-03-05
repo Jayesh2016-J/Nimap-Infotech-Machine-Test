@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary: #f1f5f9;
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 30px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        nav {
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.15s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        h1 {
+            color: var(--text-dark);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .box {
+            background: white;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px 14px;
+            margin-right: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.15s;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            padding: 10px 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.15s;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        th,
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: var(--secondary);
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+
+        .error {
+            color: var(--danger);
+            background: #fef2f2;
+            padding: 12px 16px;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        form {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .box form {
+            display: block;
+        }
+        .tabs{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tabs">
+        <nav>
+            <button style="background-color: gray;"><a style="color: black;" href="/api/category/getCategory">Categories</a></button>
+            <button style="background-color: gray;"><a style="color: black;" href="/api/product/getProduct">Products</a></button>
+        </nav>
+    </div>
+
+    <h1>Manage Categories</h1>
+
+    <% if (typeof error !=='undefined' && error) { %>
+        <div class="error">
+            <%= error %>
+        </div>
+        <% } %>
+
+            <div class="box">
+                <form action="/api/category/addCategory" method="POST">
+                    <h2>Add New Category</h2>
+                    <input type="text" name="name" required placeholder="Category Name">
+                    <button type="submit">Add Category</button>
+                </form>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category Details (Edit to Update)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (typeof categories !=='undefined' && categories.length> 0) { %>
+                        <% categories.forEach(cat=> { %>
+                            <tr>
+                                <td width="50">
+                                    <%= cat.id %>
+                                </td>
+                                <td>
+                                    <form action="/api/category/updateCategory/<%= cat.id %>?_method=PUT" method="POST">
+                                        <input type="text" name="name" value="<%= cat.name %>" required>
+                                        <button type="submit">Update</button>
+                                    </form>
+                                </td>
+                                <td width="100">
+                                    <form action="/api/category/deleteCategory/<%= cat.id %>?_method=DELETE"
+                                        method="POST">
+                                        <button type="submit" class="btn-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="3" style="text-align: center; padding: 20px;">No categories found.
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+</body>
+
+</html>
