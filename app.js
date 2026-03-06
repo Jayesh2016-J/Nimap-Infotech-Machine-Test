@@ -6,6 +6,8 @@ const morgan = require('morgan');
 const { globalerror } = require('./utlis/globalerror');
 const categoryRoute = require('./routes/categoryRoute');
 const productRoute = require('./routes/productRoute');
+
+app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));

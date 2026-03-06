@@ -71,15 +71,33 @@ exports.deleteProduct = async (req,res,next)=>{
 
 exports.getAllProduct = async (req,res,next)=>{
     try {
-        const products = await product.findAll(
-            {include:[{
-                model:category,
-                as:'category',
-                attributes:['name']
-            }]}
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = 10;
+        const offset = (page - 1) * pageSize;
+
+        const { count, rows: products } = await product.findAndCountAll(
+            {
+                include:[{
+                    model:category,
+                    as:'category',
+                    attributes:['name']
+                }],
+                limit: pageSize,
+                offset: offset,
+                order: [['id', 'ASC']]
+            }
         );
-        const categories = await category.findAll();
-        return res.render('product', { products, categories, error: null });
+        const categories = await category.findAll({ order: [['id', 'ASC']] });
+        const totalPages = Math.ceil(count / pageSize);
+
+        return res.render('product', { 
+            products, 
+            categories, 
+            error: null,
+            currentPage: page,
+            totalPages,
+            totalItems: count
+        });
     }catch(err){
         next(err)
     }

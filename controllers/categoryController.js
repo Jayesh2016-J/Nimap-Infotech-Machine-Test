@@ -62,8 +62,24 @@ exports.deleteCategory = async (req,res,next)=>{
 
 exports.getAllCategory = async (req,res,next)=>{
     try {
-        const categories = await category.findAll();
-        return res.render('category', { categories, error: null });
+        const page = parseInt(req.query.page) || 1;
+        const pageSize = 10;
+        const offset = (page - 1) * pageSize;
+
+        const { count, rows: categories } = await category.findAndCountAll({
+            limit: pageSize,
+            offset: offset,
+            order: [['id', 'ASC']]
+        });
+        const totalPages = Math.ceil(count / pageSize);
+
+        return res.render('category', { 
+            categories, 
+            error: null,
+            currentPage: page,
+            totalPages,
+            totalItems: count
+        });
     }catch(err){
         next(err)
     }
