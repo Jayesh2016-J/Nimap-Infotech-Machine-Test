@@ -7,7 +7,7 @@ Supabase they provide database postgresql
 // packeges used
  express | sequelize | pg | ejs | method-override | dotenv | nodemon | sequelize-cli | sequelize-auto | 
 
-// I have Supabase 
+// I have use Supabase 
 so You can run this project and check it without added any database configuration
 
 How to run this project
