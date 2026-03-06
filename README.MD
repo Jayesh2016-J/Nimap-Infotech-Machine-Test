@@ -1,6 +1,8 @@
 // Technology used
 Node.js
 
+// use ejs view engine
+
 //Database used
 Supabase they provide database postgresql
 
